@@ -1,0 +1,11 @@
+sex,age_min,age_max,pct20_bf,pct40_bf,pct60_bf,pct80_bf,source
+male,20,29,16,20,24,27,BodySpec body-fat percentile chart (NHANES/empirical DXA)
+male,30,39,18,22,26,30,BodySpec body-fat percentile chart (NHANES/empirical DXA)
+male,40,49,20,24,27,31,BodySpec body-fat percentile chart (NHANES/empirical DXA)
+male,50,59,21,25,29,33,BodySpec body-fat percentile chart (NHANES/empirical DXA)
+male,60,120,21,25,30,33,BodySpec body-fat percentile chart (NHANES/empirical DXA)
+female,20,29,24,28,32,37,BodySpec body-fat percentile chart (NHANES/empirical DXA)
+female,30,39,25,29,33,38,BodySpec body-fat percentile chart (NHANES/empirical DXA)
+female,40,49,26,31,35,39,BodySpec body-fat percentile chart (NHANES/empirical DXA)
+female,50,59,27,32,37,42,BodySpec body-fat percentile chart (NHANES/empirical DXA)
+female,60,120,30,33,38,42,BodySpec body-fat percentile chart (NHANES/empirical DXA)

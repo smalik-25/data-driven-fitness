@@ -38,11 +38,27 @@ and source. The shared join key across the daily models is the calendar **date**
 | `silver_daily_recovery` | one day | resting_hr_bpm, hrv_sdnn_ms, sleep_hours | AH resting HR + HRV + sleep |
 | `silver_daily_training_volume` | (workout_date, region) | volume_lbs, working_sets, total_reps | stg_strong__sets ⋈ dim_exercise |
 
-## Seed
+## Gold / marts (tables)
+
+| Model | Grain | Key columns | Notes |
+|---|---|---|---|
+| `fct_daily` | one day | tdee/intake/net balance, protein_g_per_kg, arms/legs/trunk volume, working sets | **Contract enforced.** `is_analysis_window` flags the DEXA bracket. |
+| `dim_date` | one day | year, month, day_of_week, is_analysis_window | calendar spine |
+| `dim_region` | one region | description | arms/legs/trunk |
+| `dim_acsm_targets` | (metric, context) | low, high, unit | protein & volume reference ranges |
+| `dim_nhanes_bodycomp` | one respondent | sex, age, fat%, lean/fat g | **disabled** unless `--vars 'enable_nhanes: true'` |
+| `mart_dexa_change` | one region | lean/fat delta + `*_band95` + `*_is_resolvable` | uncertainty band from CV vars |
+| `mart_recomp_reconciliation` | one row | cumulative_net_kcal, implied vs observed fat, **lean_change_unexplained_by_energy_lbs** | the centerpiece |
+
+Tunable dbt vars: `lean_cv` (0.01), `fat_cv` (0.015), `kcal_per_lb` (3500),
+`enable_nhanes` (false).
+
+## Seeds
 
 | Seed | Grain | Notes |
 |---|---|---|
 | `dim_exercise` | one exercise | exercise → region (arms/legs/trunk) + muscle_group. **Shoulders/delts → arms** (owner decision). All 38 logged exercises mapped. |
+| `dim_bodyfat_percentile` | (sex, age band) | body-fat % percentile cut points from the BodySpec/NHANES chart. Places a body fat % into a population band. |
 
 ## Documented caveats (carried, not hidden)
 

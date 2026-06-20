@@ -19,3 +19,17 @@ seeds:
       - name: muscle_group
         description: Finer muscle grouping (biceps, triceps, chest, quads, ...).
         data_tests: [not_null]
+
+  - name: dim_bodyfat_percentile
+    description: >
+      Population body-fat percentile cut points by sex + age band, from the
+      BodySpec/NHANES empirical DXA chart. pctNN_bf is the upper body-fat % bound
+      of that percentile band.
+    columns:
+      - name: sex
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ["male", "female"]
+      - name: pct20_bf
+        data_tests: [not_null]

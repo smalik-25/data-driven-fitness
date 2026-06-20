@@ -140,3 +140,47 @@ and interview talking points.
 **Next up**
 - Phase 3: gold/marts — `fct_daily`, NHANES/ACSM benchmark dims, the DEXA-change
   + energy-reconciliation marts with the precision band attached.
+
+---
+
+## 2026-06-20 — Phase 3: gold marts + BodySpec API client
+
+**What I built**
+- Wired the real **BodySpec API client** from the OpenAPI spec Sam provided:
+  Bearer-JWT auth, list results → fetch `/dexa/composition`, map kg→lbs and sum
+  left/right arms+legs to match the PDF regional shape. PDF parser stays the
+  verified default; API kicks in when `BODYSPEC_API_TOKEN` is set. Spec saved to
+  `docs/bodyspec_openapi.json`.
+- Gold star schema: `fct_daily` (one-day grain, **enforced dbt contract**)
+  joining energy/protein/recovery + training volume pivoted to arms/legs/trunk;
+  `dim_date`, `dim_region`, `dim_acsm_targets`; `dim_nhanes_bodycomp` (disabled
+  until NHANES is downloaded, via `var('enable_nhanes')`); seed
+  `dim_bodyfat_percentile` (population body-fat percentile chart).
+- `mart_dexa_change` — per-region lean/fat delta with a 95% uncertainty band
+  propagated from CV vars (`lean_cv`, `fat_cv`) and an `is_resolvable` flag.
+- `mart_recomp_reconciliation` — the centerpiece, one row. `dbt build` = PASS
+  62/62.
+
+**Why I made these decisions**
+- Encoded the population benchmark as a committed **seed** (and disabled the raw
+  NHANES model) so the project builds fully offline / in CI — the percentile
+  chart on the DEXA report is itself NHANES-derived, so it's a legit yardstick.
+- Made CV and kcal/lb **dbt vars** so the uncertainty assumptions are explicit
+  and tunable, not buried magic numbers.
+- Enforced a contract on `fct_daily` so downstream (marts + Phase 4) can trust
+  the grain and types.
+
+**What I learned or got stuck on**
+- The numbers cohere into the project's thesis. Over 30 logged days the
+  cumulative deficit (−39,190 kcal) implies −11.2 lb fat; DEXA shows −9.8 lb (gap
+  +1.4 lb — fat reconciles). The **+8.4 lb lean is unexplained by energy
+  balance**. At a 1% lean CV the regional gains are "resolvable," yet +8.4 lb
+  muscle in a month is biologically impossible → points to calibration/hydration,
+  not random error. That tension is the Phase-4 headline.
+- Hit a model/seed name collision (`dim_bodyfat_percentile`); the redundant
+  passthrough model was deleted (needed the file-delete permission — the mount
+  blocks `rm`), keeping the seed as the dimension.
+
+**Next up**
+- Phase 4: the analysis scripts — the five questions + the measurement-uncertainty
+  centerpiece, with the energy-balance and uncertainty math unit-tested.

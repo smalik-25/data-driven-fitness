@@ -1,0 +1,94 @@
+version: 2
+
+models:
+  - name: fct_daily
+    description: >
+      Daily fact table: one row per calendar day with energy balance, protein,
+      recovery, and training volume (pivoted to arms/legs/trunk). Contract
+      enforced so the grain and types are guaranteed downstream.
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: day
+        data_type: date
+        data_tests: [not_null, unique]
+      - name: is_analysis_window
+        data_type: boolean
+        data_tests: [not_null]
+      - name: active_kcal
+        data_type: double
+      - name: basal_kcal
+        data_type: double
+      - name: tdee_kcal
+        data_type: double
+      - name: intake_kcal
+        data_type: double
+      - name: net_balance_kcal
+        data_type: double
+      - name: protein_g
+        data_type: double
+      - name: protein_g_per_kg
+        data_type: double
+      - name: weight_lbs
+        data_type: double
+      - name: resting_hr_bpm
+        data_type: double
+      - name: hrv_sdnn_ms
+        data_type: double
+      - name: sleep_hours
+        data_type: double
+      - name: arms_volume_lbs
+        data_type: double
+      - name: legs_volume_lbs
+        data_type: double
+      - name: trunk_volume_lbs
+        data_type: double
+      - name: total_volume_lbs
+        data_type: double
+      - name: total_working_sets
+        data_type: bigint
+        data_tests: [not_null]
+
+  - name: mart_dexa_change
+    description: >
+      Per-region DEXA change with a 95% measurement-uncertainty band propagated
+      from per-scan CV assumptions. is_*_resolvable flags whether the observed
+      change exceeds the noise floor. Grain: one region.
+    columns:
+      - name: region
+        data_tests: [not_null, unique]
+      - name: lean_delta
+        data_tests: [not_null]
+      - name: fat_delta
+        data_tests: [not_null]
+
+  - name: mart_recomp_reconciliation
+    description: >
+      Centerpiece: reconciles measured DEXA change against energy-balance- and
+      protein-implied change over the analysis window. One row. The
+      lean_change_unexplained_by_energy_lbs column is the headline finding.
+    columns:
+      - name: cumulative_net_kcal
+        data_tests: [not_null]
+      - name: implied_fat_change_lbs
+        data_tests: [not_null]
+
+  - name: dim_date
+    description: "Calendar spine with the analysis-window flag. Grain: one day."
+    columns:
+      - name: day
+        data_tests: [not_null, unique]
+
+  - name: dim_region
+    description: "DEXA regions for volume roll-ups. Grain: one region."
+    columns:
+      - name: region
+        data_tests:
+          - not_null
+          - unique
+          - accepted_values:
+              values: ["arms", "legs", "trunk"]
+
+  - name: dim_acsm_targets
+    description: "ACSM/ISSN reference ranges. Grain: (metric, context)."
