@@ -2,6 +2,6 @@
 
 
 def test_scaffold_imports() -> None:
-    import ingestion  # noqa: F401
     import analysis  # noqa: F401
+    import ingestion  # noqa: F401
     assert True

@@ -55,3 +55,47 @@ and interview talking points.
 **Next up**
 - Phase 1: streaming parse of the 328 MB Apple Health `export.xml` into
   partitioned Parquet, plus the other five source extractors.
+
+---
+
+## 2026-06-20 — Phase 1: ingestion layer → bronze
+
+**What I built**
+- Six source extractors, each with a record dataclass + a generator-based
+  parser, real logging, and per-record error handling:
+  - `apple_health.py` — streaming `lxml.iterparse` over the 328 MB export with
+    element clearing; whitelists 10 metric types → one Parquet per metric.
+  - `bodyspec.py` — `pdfplumber` regex parse of the DEXA regional tables (PDF
+    path working; API client stubbed pending a token).
+  - `loseit.py` — calorie-day + weight Parquet.
+  - `strong.py` — set-level Parquet (volume = weight × reps).
+  - `nhanes.py` — XPT downloader + `read_sas` loader (network, run on demand).
+  - `acsm.py` — small versioned reference table of protein/volume ranges.
+- `run_ingestion.py` orchestrator (local sources by default, NHANES behind
+  `--with-nhanes`). Ran end to end against real data; ruff clean, pytest green.
+
+**Why I made these decisions**
+- `iterparse` + `elem.clear()` was non-negotiable for the 328 MB file — it keeps
+  the DOM flat. Measured: ~18 s, peak RSS ~0.5 GB (just the buffered records),
+  376k of 770k records kept.
+- Protein sourcing: the daily-calorie-summary CSV has no protein, and the Apple
+  Health `DietaryProtein` sync turned out to be **inflated** (~150–230 g/day).
+  Sam then provided `food-logs.csv` (per-food-entry logs); aggregating those by
+  date in Polars gives ~90–125 g/day — the reliable signal. So `food-logs.csv`
+  is now the canonical protein + food-calorie source (trusting only Date,
+  Calories, Protein per project rule); Apple Health protein is kept as a
+  cross-check. The ~40–50% gap between the two sources is itself a finding worth
+  surfacing in the analysis.
+- NHANES kept behind a flag so the everyday run stays offline and fast, and so
+  no network is required to reproduce the personal-data pipeline.
+- Verified extraction against ground truth: DEXA totals match the PDFs exactly
+  (lean 119.5 → 127.9 lb), giving confidence the regex parse is correct.
+
+**What I learned or got stuck on**
+- Sandbox can't run git on the mounted folder (leaves stale `.lock` files), so
+  all git is handed to me as copy-paste commands now — captured as a project
+  convention.
+
+**Next up**
+- Phase 2: DuckDB warehouse + dbt staging/silver at a daily grain; wire the
+  two dbt targets (DuckDB dev / BigQuery prod) and the exercise→region map.
