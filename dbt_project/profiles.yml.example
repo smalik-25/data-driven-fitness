@@ -1,0 +1,19 @@
+# Copy to profiles.yml (gitignored) and run dbt with: dbt build --profiles-dir .
+# dev  -> local DuckDB (default; all private data processed here)
+# prod -> BigQuery (Phase 6; only de-identified marts + public reference layer)
+data_driven_fitness:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../warehouse/ddf.duckdb"
+      threads: 4
+
+    prod:
+      type: bigquery
+      method: service-account
+      project: "{{ env_var('BQ_PROJECT', '') }}"
+      dataset: "{{ env_var('BQ_DATASET', 'data_driven_fitness') }}"
+      keyfile: "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS', '') }}"
+      location: US
+      threads: 4

@@ -1,0 +1,32 @@
+name: "data_driven_fitness"
+version: "0.1.0"
+config-version: 2
+
+profile: "data_driven_fitness"
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+# Location of the Phase-1 bronze Parquet, relative to this project dir.
+# Override with the DDF_BRONZE env var if the data lives elsewhere.
+vars:
+  bronze_dir: "{{ env_var('DDF_BRONZE', '../data/raw') }}"
+
+models:
+  data_driven_fitness:
+    staging:
+      +materialized: view
+    silver:
+      +materialized: table
+
+seeds:
+  data_driven_fitness:
+    dim_exercise:
+      +column_types:
+        exercise_name: varchar
+        region: varchar
+        muscle_group: varchar

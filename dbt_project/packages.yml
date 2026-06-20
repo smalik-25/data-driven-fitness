@@ -1,0 +1,4 @@
+# No external packages: the sandbox/CI can't reach hub.getdbt.com, and grain
+# uniqueness is covered by zero-dependency singular tests in tests/. Add
+# dbt_utils here later if you want its helpers (then run `dbt deps`).
+packages: []

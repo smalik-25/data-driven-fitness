@@ -1,0 +1,21 @@
+version: 2
+
+seeds:
+  - name: dim_exercise
+    description: >
+      Maps each Strong exercise to a DEXA body region (arms / legs / trunk) and a
+      finer muscle group. Shoulder/delt work is assigned to ARMS per the project
+      owner's decision (training convention), not to trunk.
+    columns:
+      - name: exercise_name
+        description: Exact Strong exercise label (join key to stg_strong__sets).
+        data_tests: [not_null, unique]
+      - name: region
+        description: DEXA region this exercise's volume rolls up to.
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ["arms", "legs", "trunk"]
+      - name: muscle_group
+        description: Finer muscle grouping (biceps, triceps, chest, quads, ...).
+        data_tests: [not_null]

@@ -1,0 +1,39 @@
+exercise_name,region,muscle_group
+Bicep Curl (Barbell),arms,biceps
+Bicep Curl (Cable),arms,biceps
+Bicep Curl (Machine),arms,biceps
+Bottom Half Bayesian,arms,biceps
+Hammer Curl (Cable),arms,biceps
+Preacher Curl (Barbell),arms,biceps
+Preacher Curl (Dumbbell),arms,biceps
+Reverse Curl (Barbell),arms,biceps
+Skullcrusher (Barbell),arms,triceps
+Triceps Extension,arms,triceps
+Triceps Extension (Cable),arms,triceps
+Triceps Extension (Machine),arms,triceps
+Triceps Pushdown (Cable - Straight Bar),arms,triceps
+Lateral Raise (Cable),arms,side_delts
+Lateral Raise (Dumbbell),arms,side_delts
+Lateral Raise (Machine),arms,side_delts
+Rear Delt Fly’s,arms,rear_delts
+Face Pull (Cable),arms,rear_delts
+Shoulder Press (Machine),arms,front_delts
+Chest Fly,trunk,chest
+Chest Press (Machine),trunk,chest
+Incline Chest Press (Machine),trunk,chest
+Cable Crunch,trunk,abs
+Crunch (Machine),trunk,abs
+Lat Prayer cable,trunk,back
+Lat Pulldown (Cable),trunk,back
+Seated Row (Machine),trunk,back
+Shrug (Dumbbell),trunk,traps
+Lower back,trunk,lower_back
+Calf Press on Leg Press,legs,calves
+Standing Calf Raise (Machine),legs,calves
+Glute Ham Raise,legs,hamstrings
+Hip Abductor (Machine),legs,abductors
+Hip Adductor (Machine),legs,adductors
+Leg Extension (Machine),legs,quads
+Romanian Deadlift (Dumbbell),legs,hamstrings
+Seated Leg Curl (Machine),legs,hamstrings
+Seated Leg Press (Machine),legs,quads

@@ -99,3 +99,44 @@ and interview talking points.
 **Next up**
 - Phase 2: DuckDB warehouse + dbt staging/silver at a daily grain; wire the
   two dbt targets (DuckDB dev / BigQuery prod) and the exercise→region map.
+
+---
+
+## 2026-06-20 — Phase 2: DuckDB warehouse + dbt silver
+
+**What I built**
+- dbt project (dbt-duckdb) with two targets wired in `profiles.yml`: `dev` →
+  DuckDB, `prod` → BigQuery (unused until Phase 6). `profiles.yml` gitignored;
+  committed a `profiles.yml.example`.
+- `read_bronze()` macro so staging is the only layer that touches raw Parquet.
+- 11 staging views (one per bronze table) + 5 silver tables at a daily grain:
+  `silver_daily_energy` (TDEE, intake, net balance), `silver_daily_protein`
+  (g, g/kg, with bodyweight carried forward via a DuckDB ASOF join, plus the AH
+  cross-check), `silver_daily_recovery`, `silver_daily_training_volume` (by DEXA
+  region), and `silver_dexa`.
+- `dim_exercise` seed mapping all 38 logged exercises → arms/legs/trunk +
+  muscle group. **Shoulders/delts → arms** per Sam's call.
+- Tests: built-in not_null/unique/accepted_values + 3 zero-dependency singular
+  tests (grain uniqueness ×2, all-exercises-mapped). `dbt build` = PASS 37/37.
+
+**Why I made these decisions**
+- Daily grain is the natural join: almost every behavioral source collapses to
+  one row per day, and date is the shared key to the (sparse) DEXA outcomes.
+- Dropped `dbt_utils` — the sandbox/CI can't reach hub.getdbt.com, so I covered
+  grain uniqueness with singular tests instead of an external package. Keeps the
+  project reproducible offline.
+- ASOF join for bodyweight carry-forward is the clean DuckDB tool; flagged in the
+  model + dict that prod/BigQuery needs a `last_value` swap.
+
+**What I learned or got stuck on**
+- Early numbers already cohere on the fat side: in-window mean TDEE ≈2994,
+  intake ≈1687 → ~−1306 kcal/day deficit. Over the window that implies ~11 lb
+  fat loss; DEXA shows −9.8 lb fat — close. The *lean* +8.4 lb is the part energy
+  balance can't explain (→ Phase 4). Protein ≈1.83 g/kg, squarely in the ACSM
+  hypertrophy range; AH protein ≈260 g confirms its ~2× inflation.
+- Had to add a `.gitignore` exception so the broad `*.csv` rule doesn't swallow
+  the `dim_exercise` seed.
+
+**Next up**
+- Phase 3: gold/marts — `fct_daily`, NHANES/ACSM benchmark dims, the DEXA-change
+  + energy-reconciliation marts with the precision band attached.
