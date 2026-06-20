@@ -1,0 +1,16 @@
+[project]
+name = "data-driven-fitness"
+version = "0.1.0"
+description = "Linking personal body data (DEXA, Apple Health, LoseIt, Strong) to population baselines (NHANES, ACSM)."
+requires-python = ">=3.11"
+readme = "README.md"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

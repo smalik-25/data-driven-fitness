@@ -1,0 +1,72 @@
+# ---------------------------------------------------------------------------
+# RAW HEALTH DATA — NEVER COMMIT. This is identifying personal health data.
+# Only de-identified, derived aggregates (marts) belong in version control.
+# ---------------------------------------------------------------------------
+apple_health_export/
+export.xml
+export_cda.xml
+*.pdf
+bodyspec-results*.pdf
+daily-calorie-summary.csv
+daily-values.csv
+weights.csv
+strong_workouts.csv
+*.csv
+data/raw/
+data/raw/**
+
+# Local warehouse / DuckDB
+*.duckdb
+*.duckdb.wal
+warehouse/*.duckdb
+
+# Secrets / credentials
+.env
+.env.*
+*.pem
+*.json.key
+service-account*.json
+bigquery-*.json
+
+# dbt
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+.user.yml
+profiles.yml
+
+# Airflow runtime
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.cfg
+airflow/webserver_config.py
+standalone_admin_password.txt
+
+# Evidence.dev build
+dashboard/.evidence/
+dashboard/node_modules/
+dashboard/build/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# ---------------------------------------------------------------------------
+# Allowlist: derived, shareable artifacts we DO want tracked.
+# (Add specific de-identified outputs here, e.g. committed sample fixtures.)
+# ---------------------------------------------------------------------------
+!data/sample/
+!data/sample/**

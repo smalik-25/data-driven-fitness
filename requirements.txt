@@ -1,0 +1,30 @@
+# Core data engineering / analytics stack
+polars>=1.0
+duckdb>=1.0
+pyarrow>=16.0
+
+# Transformation
+dbt-core>=1.8
+dbt-duckdb>=1.8
+dbt-bigquery>=1.8
+
+# Ingestion
+lxml>=5.0            # streaming Apple Health XML parse (iterparse)
+pdfplumber>=0.11     # DEXA PDF regional-table extraction
+pandas>=2.2          # read_sas for NHANES .XPT files
+requests>=2.32       # Bodyspec API + NHANES downloads
+python-dotenv>=1.0   # load credentials from .env
+
+# Orchestration
+apache-airflow>=2.9
+astronomer-cosmos>=1.4   # render dbt models as Airflow tasks
+
+# Analysis
+numpy>=1.26
+scipy>=1.13
+statsmodels>=0.14
+matplotlib>=3.9
+
+# Quality / tests
+pytest>=8.0
+ruff>=0.5
