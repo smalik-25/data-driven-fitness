@@ -33,7 +33,7 @@ Raw health data is **never committed**. The Apple Health export, DEXA PDFs, and 
 
 ## Progress
 
-- [ ] **Phase 0** — Scaffold, gitignore discipline, build-in-public setup
+- [x] **Phase 0** — Scaffold, gitignore discipline, build-in-public setup
 - [ ] **Phase 1** — Ingestion layer → bronze Parquet
 - [ ] **Phase 2** — DuckDB warehouse + silver daily grain (two dbt targets wired)
 - [ ] **Phase 3** — dbt marts + NHANES/ACSM benchmarks + tests
