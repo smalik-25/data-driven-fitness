@@ -37,7 +37,7 @@ Raw health data is **never committed**. The Apple Health export, DEXA PDFs, and 
 - [x] **Phase 1** — Ingestion layer → bronze Parquet
 - [x] **Phase 2** — DuckDB warehouse + silver daily grain (two dbt targets wired)
 - [x] **Phase 3** — dbt marts + NHANES/ACSM benchmarks + tests
-- [ ] **Phase 4** — Analysis & statistics (5 questions + measurement-uncertainty centerpiece)
+- [x] **Phase 4** — Analysis & statistics (5 questions + measurement-uncertainty centerpiece)
 - [ ] **Phase 5** — Evidence.dev analytics site
 - [ ] **Phase 6** — Airflow orchestration, BigQuery prod promotion, CI, deploy
 

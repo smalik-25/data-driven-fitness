@@ -184,3 +184,46 @@ and interview talking points.
 **Next up**
 - Phase 4: the analysis scripts — the five questions + the measurement-uncertainty
   centerpiece, with the energy-balance and uncertainty math unit-tested.
+
+---
+
+## 2026-06-21 — Phase 4: analysis + the measurement-uncertainty centerpiece
+
+**What I built**
+- `analysis/_common.py` — warehouse connection + the physiological constants
+  (kcal/lb, DEXA CVs, the BodySpec hydration coefficients, newbie-muscle bound),
+  stated once and unit-tested.
+- Six analyses, each writes a figure + prints a result:
+  - `measurement_uncertainty.py` (centerpiece) — decomposes the +8.4 lb lean into
+    real newbie muscle (≤4.3 lb), glycogen/hydration water (~4.1 lb ≈ 0.56 gal),
+    and a random precision band (±3.4 lb).
+  - `energy_balance.py`, `regional_hypertrophy.py`, `protein_lean.py`,
+    `recovery_load.py`, `volume_efficiency.py`.
+- `tests/test_analysis_math.py` — unit tests on the conversions (kcal/lb,
+  precision-band propagation, gallon-equivalent, newbie bound). 7/7 pass.
+
+**Why I made these decisions**
+- Two BodySpec blog posts Sam found reframed the centerpiece: their gallon-of-
+  water experiment gives a real coefficient (7.4 lb lean per gallon), and their
+  recomp client shows multi-pound lean swings that are glycogen-water. Combined
+  with Sam starting training at scan 1 (newbie gains + training-onset glycogen
+  loading), the lean delta is best read as a 3-way mixture, not "8 lb of muscle."
+  Captured the sources and coefficients in docs/measurement_notes.md.
+- Kept the assumptions as named constants/dbt vars so the arithmetic is auditable.
+
+**What I learned or got stuck on**
+- Findings: fat reconciles (implied −11.2 vs observed −9.8, gap 1.4 lb); protein
+  1.83 g/kg (in ACSM range, 16/30 days inside); recovery shows no overreaching
+  signature (weak corrs, ~6.9 h sleep); regional volume did NOT track regional
+  lean gain (Spearman −0.5, n=3) — arms got the most volume but the least lean
+  change, consistent with the water confound swamping the training signal at this
+  scale and window.
+- Bug: marts defaulted to **views**, so an analysis query re-read a bronze file
+  via a dbt-relative path and failed from the repo root. Fixed by materializing
+  marts as **tables** (correct for a serving layer anyway). Also swapped a Polars
+  `.corr` call for numpy.
+
+**Next up**
+- Phase 5: the Evidence.dev site reading from the marts, led by the
+  reconciliation + uncertainty story, with every body-comp change shown with its
+  band.

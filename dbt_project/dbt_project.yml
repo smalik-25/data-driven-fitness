@@ -22,6 +22,10 @@ models:
       +materialized: view
     silver:
       +materialized: table
+    marts:
+      # Tables (not views) so the serving layer is queryable from anywhere
+      # (e.g. the analysis scripts) without re-reading bronze relative paths.
+      +materialized: table
 
 seeds:
   data_driven_fitness:

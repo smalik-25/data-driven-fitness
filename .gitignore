@@ -42,6 +42,9 @@ airflow/airflow.cfg
 airflow/webserver_config.py
 standalone_admin_password.txt
 
+# Analysis figures (personal body data — surfaced deliberately in the dashboard)
+analysis/outputs/
+
 # Evidence.dev build
 dashboard/.evidence/
 dashboard/node_modules/
