@@ -1,0 +1,4 @@
+name: ddf
+type: duckdb
+options:
+  filename: ../warehouse/ddf.duckdb

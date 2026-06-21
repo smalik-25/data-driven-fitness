@@ -1,0 +1,15 @@
+{
+  "name": "data-driven-fitness-dashboard",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "sources": "evidence sources",
+    "dev": "evidence dev",
+    "build": "evidence build",
+    "preview": "evidence preview"
+  },
+  "dependencies": {
+    "@evidence-dev/evidence": "^40.0.0",
+    "@evidence-dev/duckdb": "^2.0.0"
+  }
+}

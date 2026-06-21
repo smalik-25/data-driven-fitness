@@ -38,7 +38,7 @@ Raw health data is **never committed**. The Apple Health export, DEXA PDFs, and 
 - [x] **Phase 2** — DuckDB warehouse + silver daily grain (two dbt targets wired)
 - [x] **Phase 3** — dbt marts + NHANES/ACSM benchmarks + tests
 - [x] **Phase 4** — Analysis & statistics (5 questions + measurement-uncertainty centerpiece)
-- [ ] **Phase 5** — Evidence.dev analytics site
+- [x] **Phase 5** — Evidence.dev analytics site
 - [ ] **Phase 6** — Airflow orchestration, BigQuery prod promotion, CI, deploy
 
 See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the full phased plan and [DEVLOG.md](DEVLOG.md) for the running build log.

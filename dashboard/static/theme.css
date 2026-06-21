@@ -1,0 +1,10 @@
+/* Sam Malik design tokens — load via a custom layout if deeper theming is wanted.
+   Evidence's config handles chart colors + dark ground; fonts below are optional. */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,400..600&family=Space+Grotesk:wght@300..700&family=IBM+Plex+Mono:ital,wght@0,400..600;1,400..500&display=swap');
+:root {
+  --pitch:#060608; --void:#0b0b0f; --slab:#131318; --hairline:#26262e;
+  --bone:#ece7d8; --bone-dim:#b6b1a4; --ash:#847f74;
+  --phosphor:#c8f24a; --oxblood:#8e1c24; --steel:#6f8fb8;
+  --font-display:'Cormorant',serif; --font-ui:'Space Grotesk',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}

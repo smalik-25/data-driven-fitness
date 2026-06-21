@@ -227,3 +227,35 @@ and interview talking points.
 - Phase 5: the Evidence.dev site reading from the marts, led by the
   reconciliation + uncertainty story, with every body-comp change shown with its
   band.
+
+---
+
+## 2026-06-21 — Phase 5: Evidence.dev analytics site
+
+**What I built**
+- An Evidence.dev project in `dashboard/`: a DuckDB source over the marts (8
+  source queries, each verified against the warehouse), four pages — Overview
+  (KPIs + the lean-gain decomposition), Reconciliation (implied vs observed fat),
+  Regional (volume vs lean + the window caveat), Recovery (load vs HR/HRV/sleep).
+- Themed to the Sam Malik design system via `evidence.config.yaml` (dark ground,
+  phosphor/oxblood/steel chart palette) and `static/theme.css` (tokens + fonts).
+  Pages carry the brand voice: mono uppercase eyebrows, decimal § indices.
+
+**Why I made these decisions**
+- Evidence over Streamlit: SQL-to-static-site fits "built in public" — it deploys
+  as a static bundle and reads straight from the marts, no app server.
+- Led every page with the honesty: the overview opens on the uncertainty
+  decomposition, not a triumphant "lean +8.4 lb." Each body-comp number is shown
+  with its band or its caveat.
+- Couldn't run the Svelte build in the sandbox (no hub access / heavy install), so
+  I verified the substantive layer — all source SQL — against the warehouse, and
+  documented the run steps + a template-fallback in dashboard/README.
+
+**What I learned or got stuck on**
+- The data layer is the testable part without a browser; building source queries
+  as standalone .sql that I could execute directly against DuckDB meant I could
+  prove correctness even though the rendering is Sam's to run.
+
+**Next up**
+- Phase 6: Airflow DAG (ingest → silver → marts → analysis → dashboard), CI,
+  promote de-identified marts to BigQuery prod, deploy the site, finalize README.
