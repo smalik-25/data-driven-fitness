@@ -259,3 +259,28 @@ and interview talking points.
 **Next up**
 - Phase 6: Airflow DAG (ingest → silver → marts → analysis → dashboard), CI,
   promote de-identified marts to BigQuery prod, deploy the site, finalize README.
+
+---
+
+## 2026-06-22 — Phase 5.1: deep documentation pages
+
+**What I built**
+- Three new dashboard pages, in the design-system voice: **About** (premise,
+  the instrument-first thesis, how I reason, architecture rationale, build-in-
+  public + privacy), **Methods** (ingestion, modeling, the energy-balance and
+  CV-propagation and decomposition math, correlation limits, programming
+  practice), and **Data Dictionary** (every variable defined with unit/source/
+  computation, a sources-and-provenance table, and a threats-to-validity list).
+- Enriched all four analysis pages with a "Variables on this page" block and an
+  explicit "What this does and doesn't show" conclusion — each stating the limit
+  of the claim (resolvable ≠ muscle; n small; approximations exposed).
+
+**Why**
+- The dashboard now teaches its own method. The writeups make the reasoning
+  legible to a reviewer and double as interview material; the honesty (every
+  conclusion paired with its caveat) is the throughline.
+- Pure markdown — no new SQL, so the source layer is untouched; Evidence picks up
+  the new pages in nav automatically.
+
+**Next up**
+- Phase 6 (unchanged): Airflow, CI, BigQuery prod promotion, deploy.

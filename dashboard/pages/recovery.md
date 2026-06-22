@@ -28,6 +28,17 @@ Across the window the correlations between training load and recovery signals ar
   <Column id=sleep_hours title="Sleep (h)" fmt='0.0' />
 </DataTable>
 
+### Variables on this page
+
+- **Volume (lbs)** — daily training volume (`Σ weight × reps`).
+- **Resting HR (bpm)** — daily mean resting heart rate; a sustained rise can signal accumulating fatigue.
+- **HRV (ms)** — heart-rate variability (SDNN); a sustained fall can signal under-recovery.
+- **Sleep (h)** — time asleep, summed from Apple Health asleep segments.
+
+### What this does and doesn't show
+
+It shows **no overreaching signature** — training load barely moves resting HR, HRV, or sleep across the window. It does **not** establish that training had no recovery cost: the window is short, lifts are logged for only ~11 days, and the correlations are **Pearson over a small n, illustrative not causal**. A flat result here is reassuring, not conclusive.
+
 <div class="sm-meta">↳ short window · correlations illustrative, not causal</div>
 
 <style>

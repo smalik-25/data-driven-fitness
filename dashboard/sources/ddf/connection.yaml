@@ -1,4 +1,6 @@
 name: ddf
 type: duckdb
 options:
-  filename: ../warehouse/ddf.duckdb
+  # Resolved relative to this source folder (sources/ddf/): up three levels to
+  # the repo root, then into warehouse/.
+  filename: ../../../warehouse/ddf.duckdb

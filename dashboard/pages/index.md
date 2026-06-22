@@ -44,6 +44,16 @@ The reading reports **+<Value data={unc} column=lean_delta/> lb lean**. At most 
 
 <div class="sm-meta">↳ method · docs/measurement_notes.md · BodySpec gallon-of-water experiment: 7.4 lb lean per gallon</div>
 
+### Variables on this page
+
+- **Body fat %** — fat mass as a share of total mass, measured by DEXA.
+- **Lean Δ / Fat Δ** — change in lean / fat mass between the two scans, in lbs.
+- **real muscle / water** — the decomposition: `min(lean Δ, 4.3 lb)` is the plausible newbie-muscle ceiling; the remainder is expressed as water at BodySpec's 7.4 lb-per-gallon coefficient.
+
+### What this does and doesn't show
+
+It shows the **fat loss is real** and the **lean gain is roughly half non-muscle water**. It does **not** assert an exact muscle figure — 4.3 lb is an upper bound, not a point estimate — and note that a change being "resolvable" only means it beats *random* precision noise, not that it is muscle. Hydration is a separate, larger, systematic effect. Definitions: [data dictionary](/data-dictionary); derivation: [methods](/methods).
+
 ## § 0.2 — Read on
 
 - [The reconciliation](/reconciliation) — what energy balance can and can't explain.

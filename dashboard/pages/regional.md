@@ -28,6 +28,17 @@ select * from ddf.regional
 
 That isn't a null result — it's what you'd expect when the lean signal is dominated by water rather than training: regional glycogen/hydration noise swamps a real but small hypertrophy signal over a short window.
 
+### Variables on this page
+
+- **Volume (lbs)** — `Σ (weight × reps)` over working sets in the window, by region. Warm-ups excluded.
+- **Sets** — count of working sets.
+- **Lean Δ (lbs) / ± band** — regional lean change and its 95% precision band.
+- **region** — each exercise mapped to a DEXA region; **shoulders/delts → arms** by design choice (see [data dictionary](/data-dictionary)).
+
+### What this does and doesn't show
+
+It shows that, at this scale, **training volume did not predict where lean was gained** (a negative rank correlation) — most consistent with regional water/glycogen noise dominating a small real signal. It does **not** disprove that training builds muscle; with n = 3 regions, ~11 logged days, and the hydration confound on every lean Δ, this is **directional, not causal**. The Spearman ρ here carries no statistical significance.
+
 <div class="sm-callout">⚠ Caveat, stated loudly: Strong logging starts 2026-04-16, so only ~11 of 31 window days have logged lifts, and each lean Δ carries the hydration confound. Treat as directional, n = 3.</div>
 
 <style>

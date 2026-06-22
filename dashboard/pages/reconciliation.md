@@ -31,6 +31,17 @@ Over **<Value data={recon} column=days_with_intake/>** logged days the cumulativ
 
 The same window shows **+<Value data={recon} column=lean_change_unexplained_by_energy_lbs/> lb lean**, which energy balance cannot produce — you cannot build 8 lb of muscle from a deficit. Protein was ample (**<Value data={recon} column=mean_protein_g_per_kg/> g/kg**, in the ACSM hypertrophy range), so some real newbie muscle is plausible — but the magnitude points to glycogen/hydration water, quantified on the [overview](/).
 
+### Variables on this page
+
+- **Cumulative net energy** — `Σ (intake − TDEE)` over the 30 logged days; negative is a deficit.
+- **Implied fat Δ** — `cumulative_net_kcal / 3500`, the fat change the deficit predicts (3,500 kcal ≈ 1 lb of fat).
+- **Observed fat Δ** — what DEXA actually measured.
+- **Gap** — `observed − implied`; small means the energy-balance model held.
+
+### What this does and doesn't show
+
+It shows that a **first-order energy-balance model predicts the fat change well** (within 1.4 lb) and **cannot explain the lean change at all** — which correctly hands the lean question to the [uncertainty decomposition](/). The 3,500 kcal/lb figure is an approximation (real tissue change mixes fat, water, lean; TDEE adapts over time), so treat the gap as "consistent," not "proven." See [methods](/methods).
+
 <div class="sm-meta">↳ the fat side is signal; the lean side is mostly the instrument. That distinction is the project.</div>
 
 <style>

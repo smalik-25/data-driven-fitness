@@ -1,22 +1,12 @@
-# Themed to the "Sam Malik" design system: terminal-meets-gothic.
-# Void grounds, phosphor-green signal, oxblood for the literary/danger voice.
+# Evidence v40 requires a plugins block declaring component + datasource plugins.
+plugins:
+  components:
+    "@evidence-dev/core-components": {}
+  datasources:
+    "@evidence-dev/duckdb": {}
+
+# Dark ground to match the Sam Malik design system (terminal-meets-gothic).
+# On-brand chart colors are re-added under `theme:` once the site renders.
 appearance:
   default: dark
-  switcher: false
-
-theme:
-  colors:
-    primary:
-      dark: "#c8f24a"   # phosphor
-      light: "#2c360f"
-  colorPalette:
-    dark:
-      - "#c8f24a"   # phosphor (signal)
-      - "#8e1c24"   # oxblood (literary / fat)
-      - "#6f8fb8"   # cold steel (info)
-      - "#e0a838"   # amber (warn)
-      - "#b6b1a4"   # bone-dim
-  colorScales:
-    default:
-      - "#2c360f"
-      - "#c8f24a"
+  switcher: true
