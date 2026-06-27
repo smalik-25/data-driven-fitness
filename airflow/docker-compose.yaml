@@ -1,0 +1,58 @@
+# Minimal local Airflow (LocalExecutor) for the data-driven-fitness DAG.
+# Mounts the repo at /opt/airflow/project so the BashOperator tasks can run the
+# project's CLI entrypoints. Python deps are installed into the worker via
+# _PIP_ADDITIONAL_REQUIREMENTS on first boot. Node (for the dashboard step) is
+# NOT in the base image — run dashboard builds on the host, or use a custom image.
+#
+# Usage (see airflow/README.md):
+#   docker compose -f airflow/docker-compose.yaml up
+# Then open http://localhost:8080 (user: airflow / pass: airflow).
+
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.9.3-python3.11
+  environment: &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    PROJECT_DIR: /opt/airflow/project
+    PYTHONPATH: /opt/airflow/project
+    DDF_BRONZE: /opt/airflow/project/data/raw
+    _PIP_ADDITIONAL_REQUIREMENTS: >-
+      polars duckdb pyarrow lxml pdfplumber pandas requests python-dotenv
+      numpy scipy statsmodels matplotlib dbt-core dbt-duckdb
+  volumes:
+    - ../:/opt/airflow/project
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command: -c "airflow db migrate && airflow users create --username airflow --password airflow --firstname Sam --lastname Malik --role Admin --email sam@example.com"
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    restart: always
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    restart: always

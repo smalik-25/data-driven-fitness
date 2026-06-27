@@ -1,0 +1,18 @@
+# Deploy the Evidence static site to Netlify.
+# Dev reads the local DuckDB warehouse; for the PUBLIC deploy, point the source
+# at the BigQuery prod target (de-identified marts only) — see dashboard/README.md
+# and the Decisions & Tradeoffs section of the root README.
+
+[build]
+  base = "dashboard"
+  command = "npm install && npm run sources && npm run build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Evidence is a static SPA; serve index.html for client routes.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

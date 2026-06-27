@@ -28,7 +28,10 @@ The analysis **window** is 2026-04-02 → 2026-05-02 (the two scans). Sources ar
 | `fat_mass_lbs` | Fat tissue | lb |
 | `lean_t0` / `lean_t1` | Lean mass at scan 1 / scan 2 | lb |
 | `lean_delta` | `lean_t1 − lean_t0` (per region or total) | lb |
+| `lean_pct_change` | `100 × lean_delta / lean_t0` — **proportional** change, the correct hypertrophy metric (absolute lbs favors large groups) | % |
+| `lean_pct_band95` | the 95% precision band as a share of baseline (`band95 / lean_t0`) — wider for small regions | ± % |
 | `fat_delta` | `fat_t1 − fat_t0` | lb |
+| `fat_pct_change` | `100 × fat_delta / fat_t0` | % |
 | `lean_delta_band95` | 95% measurement band on the lean delta, from 1% per-scan CV in quadrature | ± lb |
 | `lean_is_resolvable` | `abs(lean_delta) > lean_delta_band95` — does the change beat random noise? | bool |
 

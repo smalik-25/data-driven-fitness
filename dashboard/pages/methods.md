@@ -60,7 +60,7 @@ A little over half a gallon of net water retention — entirely plausible from t
 
 ## § 8.5 — Correlations and their limits
 
-Regional volume-vs-lean uses a **Spearman rank correlation** (monotonic association, robust to the tiny sample) across three regions. With **n = 3** this is illustrative only — it can detect a clean rank agreement or reversal but carries no real significance. The recovery page reports Pearson correlations between training load and resting HR / HRV / sleep over 31 days; with lifts logged for only ~11 of them, these too are read as directional, not causal. I report the numbers and label them rather than dressing them up.
+Regional hypertrophy uses **proportional** lean change (`100 × lean_delta / lean_t0`), not absolute lbs — absolute change structurally favors large muscle groups, so a small group like the arms can't add as many lbs even if it grows more as a share of itself. The association with training volume is a **Spearman rank correlation** across three regions. The metric choice matters: proportional change ranks +1.0 with volume (most-trained region grew most), while absolute lbs ranks −0.5 (the opposite). With **n = 3** both are illustrative — they show rank agreement or reversal but carry no significance. The recovery page reports Pearson correlations between training load and resting HR / HRV / sleep over 31 days; with lifts logged for only ~11 of them, these too are read as directional, not causal. I report the numbers and label them rather than dressing them up.
 
 ## § 8.6 — Programming practice
 

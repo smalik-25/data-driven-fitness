@@ -284,3 +284,62 @@ and interview talking points.
 
 **Next up**
 - Phase 6 (unchanged): Airflow, CI, BigQuery prod promotion, deploy.
+
+---
+
+## 2026-06-22 — Phase 6: orchestration, deploy, finalize
+
+**What I built**
+- **Airflow DAG** (`airflow/dags/ddf_pipeline.py`): `ingest → dbt_build →
+  dbt_test → analyze → dashboard_build`, thin BashOperators over the project's
+  own entrypoints so logic stays in the tested modules and the graph reads as
+  lineage. A LocalExecutor `docker-compose.yaml` + `airflow/README.md` to run it.
+- **Deploy**: `netlify.toml` builds the Evidence static bundle; documented the
+  BigQuery-prod promotion path (`make build-prod`) so the public site reads
+  de-identified marts, not raw data.
+- **README finalized**: a mermaid architecture diagram, full run instructions
+  (pipeline + dashboard + Airflow), a deploy section, and a Decisions & Tradeoffs
+  section (star schema + contract, DuckDB/BigQuery split, Airflow vs lighter
+  scheduler, uncertainty-first, no ML). Makefile gained `airflow` + fixed
+  `--profiles-dir`.
+
+**Why**
+- BashOperators over the CLI keep the DAG portable and honest — the same commands
+  I run by hand. Flagged the real gaps (Node not in the base image; cosmos as the
+  model-level-lineage upgrade) rather than pretending they're done.
+- CI stays lint + pytest (the math/scaffold tests need no warehouse), which keeps
+  it green and reproducible without shipping data.
+
+**What I learned or got stuck on**
+- Couldn't run Airflow in the sandbox (heavy install, no hub), so I validated the
+  DAG with `py_compile` + ruff and left full `airflow dags list` validation as a
+  local step. Final state: ruff clean, pytest 7/7, dbt 62/62.
+
+**Project complete** — all six phases shipped. Remaining work is genuinely
+optional: a custom Airflow image with Node, cosmos for model-level lineage, the
+live BigQuery deploy, and (Phase 2) any ML extension.
+
+---
+
+## 2026-06-22 — Refinement: proportional hypertrophy metric
+
+**What changed**
+- Per Sam's domain insight, regional hypertrophy is now measured as **proportional**
+  lean change (% of baseline), not absolute lbs. Added `lean_pct_change`,
+  `lean_pct_band95`, and `fat_pct_change` to `mart_dexa_change`; rewrote
+  `regional_hypertrophy.py` to rank by % and report Spearman for both metrics;
+  updated the dashboard source + regional page + methods/dictionary/findings.
+
+**Why it matters**
+- The metric choice **reverses the Phase-4 conclusion**. Absolute lbs favors large
+  groups: trunk gained the most lbs (+4.2) so volume looked *negatively* correlated
+  with growth (ρ=−0.5). Proportionally, arms grew most (+14.1% on the most volume),
+  then trunk (+7.8%), then legs (+5.4%) — ranking volume **exactly** (ρ=+1.0). The
+  earlier "volume didn't track lean" entry above is superseded by this: it did,
+  once the right metric is used. Caveat retained: glycogen loads into trained
+  muscles, so part of the proportional gain is trained-muscle water; n=3.
+
+**Next up**
+- Rebuild required: stop the Evidence dev server (it locks the DuckDB), `make build`,
+  `cd dashboard && npm run sources`, restart `npm run dev`; `make analyze` to refresh
+  the figure.

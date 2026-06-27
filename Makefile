@@ -1,4 +1,4 @@
-.PHONY: install ingest build analyze dashboard test lint clean
+.PHONY: install ingest build build-prod analyze dashboard airflow test lint clean
 
 install:        ## install Python deps into the active venv
 	pip install -r requirements.txt
@@ -7,10 +7,10 @@ ingest:         ## run all source extractors -> data/raw/ (Phase 1)
 	python -m ingestion.run_ingestion
 
 build:          ## run dbt against the local DuckDB (dev) target
-	cd dbt_project && dbt build --target dev
+	cd dbt_project && dbt build --target dev --profiles-dir .
 
 build-prod:     ## promote de-identified marts to BigQuery (prod) target (Phase 6)
-	cd dbt_project && dbt build --target prod
+	cd dbt_project && dbt build --target prod --profiles-dir .
 
 analyze:        ## run the analysis scripts (Phase 4)
 	python -m analysis.energy_balance
@@ -21,10 +21,13 @@ analyze:        ## run the analysis scripts (Phase 4)
 	python -m analysis.measurement_uncertainty
 
 dashboard:      ## run the Evidence.dev site locally (Phase 5)
-	cd dashboard && npm run dev
+	cd dashboard && npm run sources && npm run dev
+
+airflow:        ## bring up local Airflow (Dockerized) (Phase 6)
+	docker compose -f airflow/docker-compose.yaml up
 
 test:           ## dbt tests + pytest
-	cd dbt_project && dbt test --target dev || true
+	cd dbt_project && dbt test --target dev --profiles-dir . || true
 	pytest -q
 
 lint:

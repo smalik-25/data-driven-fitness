@@ -2,6 +2,9 @@
 -- band attached. Grain: one region.
 -- A 95% band is propagated from per-scan CV assumptions (vars lean_cv / fat_cv);
 -- is_*_resolvable flags whether the observed change exceeds the noise floor.
+-- lean_pct_change is the PROPORTIONAL change (the right hypertrophy metric):
+-- absolute lbs structurally favors large muscle groups, so small groups (arms)
+-- can show more growth proportionally than their absolute lbs suggest.
 {% set lean_cv = var('lean_cv', 0.01) %}
 {% set fat_cv  = var('fat_cv', 0.015) %}
 with scans as (
@@ -29,5 +32,14 @@ select
         pow({{ fat_cv }} * t1.fat_mass_lbs, 2)), 2)    as fat_delta_band95,
     abs(t1.fat_mass_lbs - t0.fat_mass_lbs) > 1.96 * sqrt(
         pow({{ fat_cv }} * t0.fat_mass_lbs, 2) +
-        pow({{ fat_cv }} * t1.fat_mass_lbs, 2))        as fat_is_resolvable
+        pow({{ fat_cv }} * t1.fat_mass_lbs, 2))        as fat_is_resolvable,
+    -- proportional change (hypertrophy metric) + its band as a % of baseline
+    round(100.0 * (t1.lean_mass_lbs - t0.lean_mass_lbs) / t0.lean_mass_lbs, 2)
+                                                       as lean_pct_change,
+    round(100.0 * (1.96 * sqrt(
+        pow({{ lean_cv }} * t0.lean_mass_lbs, 2) +
+        pow({{ lean_cv }} * t1.lean_mass_lbs, 2))) / t0.lean_mass_lbs, 2)
+                                                       as lean_pct_band95,
+    round(100.0 * (t1.fat_mass_lbs - t0.fat_mass_lbs) / t0.fat_mass_lbs, 2)
+                                                       as fat_pct_change
 from t0 join t1 using (region)

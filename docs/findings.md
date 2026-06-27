@@ -24,10 +24,13 @@ hydration. **Magnitude, not direction, is what's in question.**
 1. **Energy balance predicts fat, not lean.** Cumulative −39,190 kcal over 30
    logged days implies −11.2 lb fat; DEXA observed −9.8 lb (gap **1.4 lb** — a
    good reconciliation). The lean change is *not* explained by energy balance.
-2. **Regional volume did NOT track regional lean gain** (Spearman −0.5, n=3).
-   Arms got the most volume (46.5k lb) but the least lean change (+1.9 lb); trunk
-   gained the most lean (+4.2 lb) at mid volume. Consistent with the water
-   confound swamping the training signal over a short, partially-logged window.
+2. **Regional hypertrophy tracks volume — once measured proportionally.** The
+   right metric is % change, not absolute lbs (absolute favors large groups). By
+   % change, arms grew most (+14.1%) on the most volume, then trunk (+7.8%), then
+   legs (+5.4%) — ranking volume **exactly** (Spearman +1.0). By absolute lbs the
+   trunk "wins" and the correlation is −0.5. The metric choice reverses the
+   conclusion. Caveat: glycogen loads into trained muscles, so part of the
+   proportional gain is trained-muscle water; n=3, ~11 logged days.
 3. **Protein was in the hypertrophy range.** Mean **1.83 g/kg** (ACSM 1.6–2.2),
    inside the range on 16 of 30 logged days.
 4. **No overreaching signature.** Weak correlations between training load and
