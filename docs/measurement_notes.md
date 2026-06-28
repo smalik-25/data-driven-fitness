@@ -27,12 +27,13 @@ Derived coefficients used in the analysis:
 - `BODYFAT_PCT_PER_GALLON = -1.0`
 - 1 gallon ≈ 8.345 lb of water ≈ 16 cups → ~0.5–1 cup is negligible.
 
-**Implication for this project:** the observed **+8.4 lb lean** change is ≈ the
-lean swing of a single gallon of water (+7.4 lb). A modest, entirely plausible
-hydration / glycogen difference between the two scan days could therefore explain
-most of the apparent "muscle gain." This is the heart of the measurement-
-uncertainty centerpiece: the lean delta clears the *random* precision noise floor
-(~1% CV) yet is fully consistent with a *systematic* hydration confound.
+**Implication for this project.** The observed **+8.4 lb lean** change is about
+the same as the lean swing from a single gallon of water (+7.4 lb). So a modest
+and entirely plausible hydration or glycogen difference between the two scan days
+could explain most of the apparent "muscle gain." That's the heart of the
+measurement-uncertainty centerpiece: the lean delta clears the *random* precision
+noise floor (~1% CV) while still being fully consistent with a *systematic*
+hydration confound.
 
 Source: https://www.bodyspec.com/blog/post/will_drinking_water_affect_my_scan
 
@@ -50,40 +51,40 @@ BodySpec client, three scans:
 - After adding carbs back: "gained back 5.6 lb muscle" in 6 weeks — largely
   glycogen-water repletion, not pure tissue.
 
-Takeaways: (a) fat-loss + lean-gain simultaneously **is** legitimate, so the
+Takeaways: (a) losing fat and gaining lean at the same time is legitimate, so the
 direction of my result is plausible; (b) even BodySpec's showcase recomp shows
-multi-pound lean swings driven by carb/water status, reinforcing that magnitude —
-not direction — is what measurement uncertainty puts in question; (c) a realistic
-"real muscle" rate is ~0.5–1 lb/week (their 5.6 lb / 6 weeks ≈ 0.93 lb/wk).
+multi-pound lean swings driven by carb and water status, which reinforces that the
+open question is about magnitude rather than direction; (c) a realistic real-muscle
+rate is ~0.5–1 lb/week (their 5.6 lb over 6 weeks is ≈ 0.93 lb/wk).
 
 Source: https://www.bodyspec.com/blog/post/lose_fat_and_gain_muscle_is_it_possible
 
 ## 3. Training onset → newbie gains + glycogen loading
 
-Sam began consistent weight training right after scan 1 (Strong logging starts
-2026-04-16; training began ~2026-04-02). This adds a genuine third driver of the
-lean reading:
+I began consistent weight training right after scan 1 (Strong logging starts
+2026-04-16; I actually started around 2026-04-02). That adds a genuine third
+driver of the lean reading:
 
-- **Newbie gains.** An untrained beginner accrues real muscle fastest in the first
-  weeks — credibly ~0.5–1.0 lb/week early on (`NEWBIE_MUSCLE_LB_PER_WEEK_MAX`),
-  so up to ~4 lb of *real* muscle over the 30-day window is plausible.
+- **Newbie gains.** An untrained beginner builds real muscle fastest in the first
+  weeks, credibly ~0.5–1.0 lb/week early on (`NEWBIE_MUSCLE_LB_PER_WEEK_MAX`), so
+  up to ~4 lb of *real* muscle over the 30-day window is plausible.
 - **Training-onset glycogen loading.** Newly trained muscle stores more glycogen,
-  and each gram of glycogen binds ~3 g of water — all of which DEXA reads as lean.
-  So starting to train inflates "lean mass" via water on top of any real tissue.
+  and each gram of glycogen binds ~3 g of water, all of which DEXA reads as lean.
+  So starting to train inflates "lean mass" with water on top of any real tissue.
 
-This means the lean gain is best read as a *mixture*, not one cause.
+So the lean gain is best read as a *mixture* rather than one cause.
 
 ## How Phase 4 uses this
 
 `measurement_uncertainty.py` decomposes the observed lean delta into **three**
-buckets rather than asserting it as muscle:
-1. **Random precision** — propagated from per-scan CV (~1% lean). Gives the ±band.
-2. **Systematic hydration / glycogen water** — using `LEAN_LB_PER_GALLON`, express
-   the lean gain as "equivalent gallons of water" and show how small a hydration /
+buckets instead of asserting it as muscle:
+1. **Random precision**, propagated from per-scan CV (~1% lean), which gives the ±band.
+2. **Systematic hydration / glycogen water**: using `LEAN_LB_PER_GALLON`, express
+   the lean gain as equivalent gallons of water and show how small a hydration or
    glycogen difference is needed to explain a large share of it.
-3. **Plausible real (newbie) muscle** — bounded at ~1 lb/week over the window
+3. **Plausible real (newbie) muscle**, bounded at ~1 lb/week over the window
    (≈ 4 lb) given the untrained-beginner starting point.
 
 The honest conclusion: the +8.4 lb lean is a real-muscle component (elevated by
 newbie status) **plus** a glycogen/hydration-water component, with random precision
-a minor term — not 8.4 lb of muscle.
+a minor term. It isn't 8.4 lb of muscle.

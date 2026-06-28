@@ -4,7 +4,7 @@ title: Recovery
 
 <div class="sm-eyebrow">§ 3.0 — RECOVERY · DID TRAINING LOAD MOVE SLEEP, HRV, RESTING HR?</div>
 
-_Looking for an overreaching signature: rising resting HR, falling HRV, falling sleep as load ramps._
+_I'm looking for an overreaching signature: rising resting HR, falling HRV, less sleep as load ramps._
 
 ```sql recovery
 select * from ddf.recovery
@@ -18,7 +18,7 @@ select * from ddf.recovery
 
 ## § 3.1 — No overreaching signature
 
-Across the window the correlations between training load and recovery signals are weak in every direction — resting HR barely moves, HRV drifts slightly down, sleep is flat at roughly 6.9 h. Nothing here looks like accumulating fatigue, though the window is short and lifts are only logged from 2026-04-16.
+Across the window the correlations between training load and recovery signals are weak in every direction. Resting HR barely moves, HRV drifts slightly down, and sleep sits flat at roughly 6.9 h. Nothing here looks like accumulating fatigue, though the window is short and lifts are only logged from 2026-04-16.
 
 <DataTable data={recovery}>
   <Column id=day title="Day" />
@@ -37,7 +37,7 @@ Across the window the correlations between training load and recovery signals ar
 
 ### What this does and doesn't show
 
-It shows **no overreaching signature** — training load barely moves resting HR, HRV, or sleep across the window. It does **not** establish that training had no recovery cost: the window is short, lifts are logged for only ~11 days, and the correlations are **Pearson over a small n, illustrative not causal**. A flat result here is reassuring, not conclusive.
+There's **no overreaching signature**: training load barely moves resting HR, HRV, or sleep across the window. That doesn't establish that training had no recovery cost. The window is short, lifts are logged for only about 11 days, and the correlations are Pearson over a small n, so they're illustrative rather than causal. A flat result here is reassuring but not conclusive.
 
 <div class="sm-meta">↳ short window · correlations illustrative, not causal</div>
 

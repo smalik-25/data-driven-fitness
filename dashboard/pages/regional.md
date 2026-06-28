@@ -4,7 +4,7 @@ title: Regional Hypertrophy
 
 <div class="sm-eyebrow">§ 2.0 — REGIONAL · DID THE MUSCLES I TRAINED MOST GAIN THE MOST?</div>
 
-_The answer depends entirely on the metric — and the right metric flips the result._
+_The answer depends entirely on the metric, and the right one flips the result._
 
 ```sql regional
 select * from ddf.regional
@@ -25,13 +25,13 @@ select * from ddf.regional
 
 ## § 2.1 — Absolute lbs is the wrong metric; proportional growth is the right one
 
-Hypertrophy should be measured **proportionally**. Arms are far smaller than the trunk, so they can't add as many absolute lbs — judging by lbs structurally penalizes them. As a share of their own baseline:
+Hypertrophy is better measured **proportionally**. Arms are much smaller than the trunk, so they can't add as many absolute pounds, and grading by pounds quietly penalizes them. As a share of each region's own baseline:
 
-- **Arms** grew **+14.1%** — the most — on the most volume (46.5k lb).
-- **Trunk** +7.8% at middling volume.
-- **Legs** +5.4% — the least — on the least volume.
+- **Arms** grew the most, **+14.1%**, on the most volume (46.5k lb).
+- **Trunk** grew **+7.8%** at middling volume.
+- **Legs** grew the least, **+5.4%**, on the least volume.
 
-By **proportional** growth the ranking matches the training-volume ranking exactly (Spearman **+1.0**). By **absolute** lbs the trunk looks like the "winner" and the correlation is **−0.5** — the opposite conclusion, driven purely by region size. This is the lesson: *choose the metric that matches the question.*
+Ranked by proportional growth, the order matches the training-volume order exactly (Spearman **+1.0**). Ranked by absolute pounds, the trunk looks like the winner and the correlation flips to **−0.5**, purely because the trunk is bigger. The takeaway is to pick the metric that matches the question.
 
 ### Variables on this page
 
@@ -42,7 +42,7 @@ By **proportional** growth the ranking matches the training-volume ranking exact
 
 ### What this does and doesn't show
 
-It shows that **once you use the right (proportional) metric, the most-trained region shows the most growth** — a clean training signal that the absolute view hid. It does **not** prove causation: n = 3 regions, ~11 logged days, and the hydration/glycogen confound still applies — and note glycogen loads *preferentially into trained muscles*, which would push proportional growth the same direction, so part of arms' +14% is likely trained-muscle water, not only fiber. Directional, not causal.
+With the right (proportional) metric, the most-trained region also grew the most, a clean training signal the absolute view hid. It doesn't prove causation. There are only three regions and about 11 logged days, and the hydration/glycogen confound still applies. Glycogen also loads *preferentially into trained muscles*, which pushes proportional growth in the same direction, so part of arms' +14% is probably trained-muscle water rather than fiber. Read it as directional.
 
 <div class="sm-callout">⚠ Caveat: Strong logging starts 2026-04-16 (~11 of 31 window days), n = 3, and proportional change amplifies measurement noise for small regions (arms' band is widest in % terms). Treat as directional.</div>
 

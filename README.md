@@ -1,15 +1,15 @@
 # Data Driven Fitness
 
-An end-to-end data engineering / analytics project that links my own body data — two DEXA scans, Apple Health, calorie/protein logs, and tracked lifts — to population baselines (NHANES, ACSM) to answer five concrete physiology questions.
+An end-to-end data engineering and analytics project that links my own body data (two DEXA scans, Apple Health, calorie and protein logs, and tracked lifts) to population baselines (NHANES, ACSM), to answer five concrete physiology questions.
 
-**The story this project is built around:** my two DEXA scans are exactly one month apart and report a −9.8 lb fat / +8.4 lb lean change. That magnitude is biologically implausible in 30 days — it exceeds what energy balance can produce and largely reflects DEXA measurement uncertainty and hydration variance. Rather than plot the numbers and declare a body recomposition, this project **quantifies that measurement uncertainty, shows where the observed change falls inside the instrument's noise floor, and reconciles it against energy balance and population data.** That rigor is the point.
+**What the project is built around.** My two DEXA scans sit exactly a month apart and report a −9.8 lb fat / +8.4 lb lean change. That's biologically implausible over 30 days. It's more than energy balance can produce, and a lot of it is DEXA measurement uncertainty and hydration. So instead of plotting the numbers and calling it a body recomposition, the project **quantifies that uncertainty, shows where the observed change sits inside the instrument's noise floor, and reconciles what's left against energy balance and population data.**
 
 ## Questions
 
 1. Did measured calorie balance predict the DEXA lean/fat change? (energy-balance reconciliation)
 2. Which body regions gained the most lean mass, and does that track training volume by region?
 3. Did protein intake (g/kg) correlate with lean retention/gain, vs the ACSM reference range?
-4. Did sleep, HRV, or resting heart rate move with training load — any sign of overreaching?
+4. Did sleep, HRV, or resting heart rate move with training load, any sign of overreaching?
 5. Lean mass gained per unit of training volume, per muscle group.
 
 ## Tech stack
@@ -17,15 +17,15 @@ An end-to-end data engineering / analytics project that links my own body data �
 | Layer | Tool | Notes |
 |---|---|---|
 | Ingestion | Python + Polars | Streaming parse of the 328 MB Apple Health XML; NHANES `.XPT`; PDF table extraction |
-| Warehouse (dev) | DuckDB | Local, private — all raw data processed here, never leaves the machine |
-| Warehouse (prod) | BigQuery | Cloud — only de-identified marts + public reference layer; serves the public dashboard |
+| Warehouse (dev) | DuckDB | Local and private; all raw data processed here, never leaves the machine |
+| Warehouse (prod) | BigQuery | Cloud; only de-identified marts and the public reference layer; serves the public dashboard |
 | Transformation | dbt-core | One project, two targets (`dev`→DuckDB, `prod`→BigQuery); tests + contracts |
 | Orchestration | Apache Airflow | One DAG chaining ingest → silver → marts → analysis → dashboard |
 | Analysis | Python + Polars | Statistics, measurement-uncertainty propagation |
 | Serving | Evidence.dev | SQL-to-static-site BI, deployed publicly |
 | CI | GitHub Actions | dbt tests + analysis unit tests on every push |
 
-> The DuckDB-dev / BigQuery-prod split is a deliberate dev/prod-parity and public-serving choice, **not** a scale decision — at this data volume DuckDB alone is plenty. ML/forecasting is a deliberate future extension, not part of this build.
+> The DuckDB-dev / BigQuery-prod split is a dev/prod-parity and public-serving choice rather than a scale one; at this data volume DuckDB alone is plenty. ML and forecasting are a deliberate future extension, out of scope here.
 
 ## Data privacy
 
@@ -101,25 +101,26 @@ make build && make export-public      # refresh marts + public DB
 
 `netlify.toml` sets base `dashboard`, build `npm install && npm run sources &&
 npm run build`, publish `build`, Node 20. Pushes auto-redeploy. (A BigQuery prod
-target is wired as an alternative — `make build-prod`, needs `BQ_PROJECT` +
-`GOOGLE_APPLICATION_CREDENTIALS` — but the committed public DB is the default and
+target is wired as an alternative: `make build-prod`, which needs `BQ_PROJECT`
+and `GOOGLE_APPLICATION_CREDENTIALS`. The committed public DB is the default and
 needs no cloud setup.)
 
 ## Decisions & tradeoffs
 
-- **Star schema + contract on `fct_daily`** over a wide flat table — a guaranteed
-  grain and types let the marts and analysis trust their inputs.
-- **DuckDB (dev) + BigQuery (prod), one dbt project** — a privacy / dev-prod-parity
-  choice, not a scale one. At this volume DuckDB alone suffices; the split keeps
-  raw data local and exposes only aggregates to the cloud and the public site.
-- **Airflow over a lighter scheduler** — overkill for a single-machine pipeline,
-  chosen for the recognizable, production-shaped orchestration; `dbt` runs as a
-  BashOperator (cosmos `DbtTaskGroup` is the documented next step).
-- **Measurement uncertainty is front-and-center** — the headline finding is that
-  the +8.4 lb "lean gain" is mostly glycogen/hydration water, not muscle. The
-  project is built to prove that, not to celebrate the number.
-- **No ML** — deliberately out of scope; the value here is correct, tested,
-  honest data engineering and statistics, not a model.
+- **Star schema + contract on `fct_daily`** over a wide flat table. A guaranteed
+  grain and fixed types let the marts and the analysis trust their inputs.
+- **DuckDB (dev) + BigQuery (prod), one dbt project.** A privacy and
+  dev/prod-parity choice rather than a scale one. At this volume DuckDB alone is
+  enough; the split keeps raw data local and exposes only aggregates to the cloud
+  and the public site.
+- **Airflow over a lighter scheduler.** It's overkill for a single-machine
+  pipeline, picked for the recognizable, production-shaped orchestration. `dbt`
+  runs as a BashOperator (cosmos `DbtTaskGroup` is the documented next step).
+- **Measurement uncertainty up front.** The headline is that the +8.4 lb "lean
+  gain" is mostly glycogen and hydration water rather than muscle, and the project
+  is built to show that.
+- **No ML.** Deliberately out of scope. The value here is correct, tested, honest
+  data engineering and statistics.
 
 ## Documentation
 
