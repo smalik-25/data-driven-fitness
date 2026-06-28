@@ -88,11 +88,22 @@ docker compose -f airflow/docker-compose.yaml up   # localhost:8080
 
 ## Deploy
 
-The Evidence site builds to a static bundle (`netlify.toml` at the repo root).
-For the **public** deploy, promote de-identified marts to BigQuery
-(`make build-prod`, needs `BQ_PROJECT` + `GOOGLE_APPLICATION_CREDENTIALS`) and
-point the Evidence source at the prod target so nothing private leaves the
-machine.
+The public site builds from a small, committed, de-identified DuckDB
+(`dashboard/sources/ddf/public.duckdb`) holding only aggregate marts/dims — no
+raw data, no PII. `make export-public` regenerates it from the local warehouse.
+Because it's committed, Netlify (and anyone who clones) can build the site with
+no data or secrets in CI:
+
+```bash
+make build && make export-public      # refresh marts + public DB
+# commit public.duckdb, push; then in Netlify: Import from Git (uses netlify.toml)
+```
+
+`netlify.toml` sets base `dashboard`, build `npm install && npm run sources &&
+npm run build`, publish `build`, Node 20. Pushes auto-redeploy. (A BigQuery prod
+target is wired as an alternative — `make build-prod`, needs `BQ_PROJECT` +
+`GOOGLE_APPLICATION_CREDENTIALS` — but the committed public DB is the default and
+needs no cloud setup.)
 
 ## Decisions & tradeoffs
 

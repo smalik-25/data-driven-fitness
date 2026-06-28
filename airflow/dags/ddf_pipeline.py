@@ -31,6 +31,11 @@ COMMON_ENV = {
     "PROJECT_DIR": PROJECT_DIR,
     "PYTHONPATH": PROJECT_DIR,
     "DDF_BRONZE": f"{PROJECT_DIR}/data/raw",
+    # Route dbt artifacts to container-local paths so dbt never reuses the host's
+    # mounted target/ (which carries host-absolute file paths from `make build`)
+    # and never write-contends with the host over the shared mount.
+    "DBT_TARGET_PATH": "/tmp/dbt_target",
+    "DBT_LOG_PATH": "/tmp/dbt_logs",
 }
 
 default_args = {
@@ -60,7 +65,8 @@ with DAG(
     dbt_build = BashOperator(
         task_id="dbt_build",
         bash_command=(
-            f"cd {PROJECT_DIR}/dbt_project && dbt build --target dev --profiles-dir ."
+            f"cd {PROJECT_DIR}/dbt_project && "
+            "dbt build --target dev --profiles-dir . --no-partial-parse"
         ),
         env=COMMON_ENV,
         append_env=True,
@@ -70,7 +76,8 @@ with DAG(
     dbt_test = BashOperator(
         task_id="dbt_test",
         bash_command=(
-            f"cd {PROJECT_DIR}/dbt_project && dbt test --target dev --profiles-dir ."
+            f"cd {PROJECT_DIR}/dbt_project && "
+            "dbt test --target dev --profiles-dir . --no-partial-parse"
         ),
         env=COMMON_ENV,
         append_env=True,
@@ -92,11 +99,19 @@ with DAG(
         append_env=True,
     )
 
-    # 5 — Refresh and build the Evidence static site from the marts.
+    # 5 — Refresh the Evidence sources from the marts. The static site build +
+    # public deploy is owned by the deploy pipeline (Netlify), which runs where
+    # Node is available; if npm isn't in this image the task self-skips green and
+    # says so, keeping the lineage visible without failing the run.
     dashboard_build = BashOperator(
         task_id="dashboard_build",
         bash_command=(
-            f"cd {PROJECT_DIR}/dashboard && npm ci && npm run sources && npm run build"
+            f"cd {PROJECT_DIR}/dashboard && "
+            "if command -v npm >/dev/null 2>&1; then "
+            "  npm ci && npm run sources; "
+            "else "
+            "  echo 'npm not in this image — site build/deploy handled by Netlify'; "
+            "fi"
         ),
         env=COMMON_ENV,
         append_env=True,

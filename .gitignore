@@ -78,3 +78,8 @@ env/
 # the broad *.csv rule above would otherwise catch them.
 !dbt_project/seeds/
 !dbt_project/seeds/*.csv
+
+# The public, de-identified dashboard DB IS committed (so Netlify/clones can build
+# the site), even though the broad *.duckdb rule above would otherwise catch it.
+# This holds only aggregate marts/dims — no raw data, no bronze, nothing PII.
+!dashboard/sources/ddf/public.duckdb

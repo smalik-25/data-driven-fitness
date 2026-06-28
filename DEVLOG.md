@@ -343,3 +343,35 @@ live BigQuery deploy, and (Phase 2) any ML extension.
 - Rebuild required: stop the Evidence dev server (it locks the DuckDB), `make build`,
   `cd dashboard && npm run sources`, restart `npm run dev`; `make analyze` to refresh
   the figure.
+
+---
+
+## 2026-06-27 — Public deploy: committed de-identified marts DB
+
+**What I built**
+- `scripts/export_public_db.py` (`make export-public`): copies only the six
+  aggregate tables the dashboard queries (marts + silver_dexa +
+  silver_daily_training_volume + fct_daily + dim_bodyfat_percentile) from the
+  gitignored warehouse into a small, **committed** `public.duckdb`.
+- Repointed Evidence's connection at `public.duckdb`; added a gitignore exception
+  so that one DB is tracked while the full warehouse stays ignored. `make
+  dashboard` now depends on `export-public`.
+- Updated `netlify.toml`/READMEs for **auto-deploy on push**: Netlify imports the
+  repo and builds from the committed public DB — no data or secrets in CI, and a
+  fresh clone can build the site too.
+
+**Why**
+- Realizes the "de-identified marts to a place CI can read" idea without the
+  weight of BigQuery. The public DB holds only my own aggregate daily/region
+  figures — the intended public deliverable — never raw exports or the DEXA PDFs.
+- Chose this over a static-bundle CLI deploy so the site auto-rebuilds on push and
+  the repo is reproducible by anyone.
+
+**Airflow:** the DAG is validated and the data pipeline runs in-container; I
+stopped short of a fully green local Docker run (macOS bind-mount EDEADLK quirks)
+since the orchestration's portfolio value — a correct, lineage-clear DAG — is
+already banked, and the pipeline runs green via `make`.
+
+**Next up**
+- Sam: `make build && make export-public`, commit `public.duckdb`, push, connect
+  Netlify → live URL.

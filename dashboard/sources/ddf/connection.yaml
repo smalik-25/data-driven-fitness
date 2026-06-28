@@ -1,6 +1,7 @@
 name: ddf
 type: duckdb
 options:
-  # Resolved relative to this source folder (sources/ddf/): up three levels to
-  # the repo root, then into warehouse/.
-  filename: ../../../warehouse/ddf.duckdb
+  # The committed, de-identified public DB (built by `make export-public`).
+  # Resolved relative to this source folder (sources/ddf/). Local dev and Netlify
+  # CI both read this — the full warehouse stays gitignored and local.
+  filename: public.duckdb

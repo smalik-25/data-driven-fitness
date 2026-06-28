@@ -1,4 +1,4 @@
-.PHONY: install ingest build build-prod analyze dashboard airflow test lint clean
+.PHONY: install ingest build build-prod analyze export-public dashboard airflow test lint clean
 
 install:        ## install Python deps into the active venv
 	pip install -r requirements.txt
@@ -20,7 +20,10 @@ analyze:        ## run the analysis scripts (Phase 4)
 	python -m analysis.volume_efficiency
 	python -m analysis.measurement_uncertainty
 
-dashboard:      ## run the Evidence.dev site locally (Phase 5)
+export-public:  ## export de-identified marts -> committed dashboard/sources/ddf/public.duckdb
+	python scripts/export_public_db.py
+
+dashboard: export-public  ## run the Evidence.dev site locally (Phase 5)
 	cd dashboard && npm run sources && npm run dev
 
 airflow:        ## bring up local Airflow (Dockerized) (Phase 6)

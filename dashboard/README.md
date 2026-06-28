@@ -3,43 +3,60 @@
 A SQL-to-static-site BI app over the dbt marts, themed to the Sam Malik design
 system (terminal-meets-gothic: void ground, phosphor signal, oxblood literary).
 
-## Run it locally
+## Data source
 
-The warehouse must exist first (`make build` from the repo root builds
-`warehouse/ddf.duckdb`). Then:
+Evidence reads `sources/ddf/public.duckdb` — a small, **committed**, de-identified
+DuckDB holding only the aggregate marts/dims the pages query (no raw data, no
+bronze, nothing PII). It's produced from the full local warehouse by:
 
 ```bash
-cd dashboard
-npm install
-npm run sources   # materialize the source queries from DuckDB
-npm run dev       # serve at http://localhost:3000
+make export-public      # warehouse/ddf.duckdb -> dashboard/sources/ddf/public.duckdb
 ```
 
-Build the static site for deploy:
+Because it's committed, both local dev and Netlify CI build from it identically,
+and anyone who clones the repo can build the site without the raw data.
+
+## Run it locally
 
 ```bash
-npm run build     # outputs to dashboard/build/
+# from the repo root, after `make build` (which builds the warehouse):
+make export-public          # refresh the committed public DB
+cd dashboard
+npm install                 # use Node 20 (nvm use 20); Node 24 hangs Evidence's Vite
+npm run sources             # materialize the source queries from public.duckdb
+npm run dev                 # serve at http://localhost:3000
+```
+
+Build the static site:
+
+```bash
+npm run build               # outputs to dashboard/build/
 ```
 
 ## Layout
 
-- `sources/ddf/connection.yaml` — DuckDB connection to `../warehouse/ddf.duckdb`.
-- `sources/ddf/*.sql` — one query per mart/view; each becomes `ddf.<name>` in pages.
-  All seven were verified to run against the warehouse.
-- `pages/` — `index` (overview + uncertainty), `reconciliation`, `regional`,
-  `recovery`.
-- `evidence.config.yaml` — dark appearance + on-brand chart palette.
-- `static/theme.css` — design tokens + fonts, for deeper custom styling.
+- `sources/ddf/connection.yaml` — DuckDB connection to the committed `public.duckdb`.
+- `sources/ddf/*.sql` — one query per mart; each becomes `ddf.<name>` in pages.
+- `pages/` — `index`, `reconciliation`, `regional`, `recovery`, plus `about`,
+  `methods`, `data-dictionary`.
+- `evidence.config.yaml` — plugins + dark appearance.
+- `static/theme.css` — design tokens + fonts.
 
-## Deploy (Phase 6)
+## Deploy (Netlify, auto-build on push)
 
-Point the deployed site at the **BigQuery** prod target (de-identified marts only)
-so the public dashboard reads from the cloud warehouse while local dev stays on
-DuckDB. Netlify or GitHub Pages both serve the static `build/` output.
+`netlify.toml` (repo root) builds from the committed `public.duckdb`, so no data
+or secrets are needed in CI:
+
+1. Push to GitHub.
+2. In Netlify: **Add new site → Import from Git**, pick the repo. The build
+   settings come from `netlify.toml` (base `dashboard`, build `npm install &&
+   npm run sources && npm run build`, publish `build`, Node 20).
+3. Every push to the default branch redeploys. To refresh the data, run
+   `make build && make export-public`, commit the updated `public.duckdb`, push.
 
 ## Notes
 
-- Version pins in `package.json` are a reasonable baseline; if the Evidence CLI
-  has moved, scaffold a fresh project with `npx degit evidence-dev/template .`
-  and drop `pages/` + `sources/` in — the SQL and content are framework-stable.
-- `node_modules/`, `.evidence/`, and `build/` are gitignored.
+- Node **20** required (Node 24 hangs Evidence's Vite pre-bundle). `netlify.toml`
+  pins `NODE_VERSION = "20"` for CI.
+- `node_modules/`, `.evidence/`, and `build/` are gitignored; `public.duckdb` is
+  explicitly tracked (gitignore exception).
